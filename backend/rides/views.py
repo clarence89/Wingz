@@ -25,7 +25,8 @@ class RideViewSet(viewsets.ModelViewSet):
     pagination_class = ViewsetPagination
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_class = RideFilter
-    ordering_fields = ['pickup_time', 'distance']
+    ordering_fields = ['pickup_time', 'distance']  
+    ordering = ['pickup_time']
 
     @swagger_auto_schema(
         query_serializer=RideQuerySerializer, 
@@ -64,7 +65,7 @@ class RideViewSet(viewsets.ModelViewSet):
             queryset = queryset.annotate(
                 distance=ExpressionWrapper(distance_expr, output_field=FloatField())
             ).order_by('distance')
-        # Checked and it is only Three
+        # Checked and it is only Two
         print(f"Total Queries Executed: {len(connection.queries)}")
         return queryset
 

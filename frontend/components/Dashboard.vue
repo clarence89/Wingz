@@ -1,9 +1,13 @@
 <template>
   <div>
-    <div class="grid grid-cols-3 gap-4 my-4">
+    <div class="grid grid-cols-4 gap-4 my-4">
       <div class="flex flex-col">
         <label for="email" class="text-gray-600 text-sm font-medium">Rider Email</label>
         <UInput id="email" v-model="state.filters.email" placeholder="Email" />
+      </div>
+      <div class="flex flex-col">
+        <label for="status" class="text-gray-600 text-sm font-medium">Rider Status</label>
+        <UInput id="status" v-model="state.filters.status" placeholder="Status" />
       </div>
       <div class="flex flex-col">
         <label for="latitude" class="text-gray-600 text-sm font-medium">Pickup Latitude</label>
@@ -96,6 +100,7 @@ const getUrlParams = (url) => {
   let parsed_url = url.replace(config.public.baseURL, "");
   const urlParams = new URLSearchParams();
   if (state.filters.email) urlParams.set("rider_email", state.filters.email);
+  if (state.filters.status) urlParams.set("rider_status", state.filters.status);
   if (state.filters.latitude && state.filters.longitude) {
     urlParams.set("latitude", parseFloat(state.filters.latitude));
     urlParams.set("longitude", parseFloat(state.filters.longitude));
