@@ -42,3 +42,6 @@ class RideEventSerializer(serializers.ModelSerializer):
         model = RideEvent
         fields = '__all__'
 
+class RideQuerySerializer(serializers.Serializer):
+    latitude = serializers.FloatField(required=False, help_text="User's current latitude")
+    longitude = serializers.FloatField(required=False, help_text="User's current longitude")

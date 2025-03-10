@@ -2,7 +2,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets
 from django.db.models import Prefetch, F, Value, FloatField, ExpressionWrapper
 from .models import Ride, RideEvent
-from .serializer import RideSerializer, RideEventSerializer
+from .serializer import RideSerializer, RideEventSerializer, RideQuerySerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django.db.models import F, Value, FloatField, ExpressionWrapper
@@ -15,6 +15,8 @@ from django.utils.timezone import now
 from .filters import RideFilter
 import logging
 logger = logging.getLogger(__name__)
+
+
 @swagger_auto_schema(tags=["Rides"])
 class RideViewSet(viewsets.ModelViewSet):
     queryset = Ride.objects.all()
@@ -24,6 +26,12 @@ class RideViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_class = RideFilter
     ordering_fields = ['pickup_time', 'distance']
+
+    @swagger_auto_schema(
+        query_serializer=RideQuerySerializer, 
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
         today = now().date()
@@ -41,8 +49,6 @@ class RideViewSet(viewsets.ModelViewSet):
 
         user_latitude = self.request.query_params.get('latitude')
         user_longitude = self.request.query_params.get('longitude')
-        print("User Latitude:", user_latitude)
-        print("User Longitude:", user_longitude)
         if user_latitude and user_longitude:
             try:
                 user_latitude = float(user_latitude)
