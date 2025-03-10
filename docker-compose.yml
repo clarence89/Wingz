@@ -1,0 +1,61 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file: ./backend/.env
+    ports:
+      - "5432:5432"
+
+  pgweb:
+    restart: always
+    image: sosedoff/pgweb
+    ports:
+      - "8081:8081"
+    environment:
+      - PGWEB_DATABASE_URL=postgres://postgres:postgres@db:5432/postgres?sslmode=disable
+
+  backend:
+    restart: always
+    build:
+      context: ./backend/
+      dockerfile: ./Dockerfile
+    command: >
+      sh -c "pipenv install &&
+             python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py seed_roles &&
+             python manage.py seed_users_and_rides &&
+             python manage.py createpreset_superuser &&
+             python manage.py runserver 0.0.0.0:8000"
+    env_file: ./backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/usr/src/app
+
+  frontend:
+    restart: always
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command: >
+      sh -c "npm install && npm run dev"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      NUXT_TELEMETRY_DISABLED: "1"
+
+  caddy:
+    restart: always
+    image: caddy:latest
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
