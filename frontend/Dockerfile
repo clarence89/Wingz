@@ -9,17 +9,11 @@ RUN apk update && apk upgrade
 RUN apk add git
 
 # copy the app, note .dockerignore
-COPY package*.json /app/
-
-# exclude node_modules
 COPY . /app/
-RUN rm -rf node_modules
-RUN npm install --omit=dev
-
+RUN npm install
 # RUN npm run build
 
 EXPOSE 3000
 EXPOSE 80
 
 # CMD [ "npm", "start" ]
-
