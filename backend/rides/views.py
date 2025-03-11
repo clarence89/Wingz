@@ -63,7 +63,7 @@ class RideViewSet(viewsets.ModelViewSet):
             distance_expr = ACos(Sin(lat_diff) * Sin(lat_diff) + Cos(lat_diff) * Cos(lat_diff) * Cos(lon_diff)) * 6371
             queryset = queryset.annotate(
                 distance=ExpressionWrapper(distance_expr, output_field=FloatField())
-            ).order_by('distance')
+            )
         # Checked and it is only Two
         print(f"Total Queries Executed: {len(connection.queries)}")
         return queryset

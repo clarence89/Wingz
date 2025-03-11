@@ -7,7 +7,7 @@
       </div>
       <div class="flex flex-col">
         <label for="status" class="text-gray-600 text-sm font-medium">Rider Status</label>
-        <UInput id="status" v-model="state.filters.status" placeholder="Status" />
+        <USelect v-model="state.filters.status" :options="[{label: 'All', value: ''}, {label: 'Pickup', value: 'pickup'}, {label: 'Dropoff', value: 'dropoff'}, {label: 'En-Route', value: 'en-route'}]" />
       </div>
       <div class="flex flex-col">
         <label for="latitude" class="text-gray-600 text-sm font-medium">Pickup Latitude</label>
@@ -69,6 +69,7 @@
 <script setup>
 import { useAuthStore } from "~/stores/auth";
 import { reactive } from "vue";
+import { USelect } from "#components";
 const columns = [
   { key: "status", label: "Status" },
   { key: "pickup", label: "Pickup Coordinates" },
