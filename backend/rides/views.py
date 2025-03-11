@@ -5,7 +5,6 @@ from .models import Ride, RideEvent
 from .serializer import RideSerializer, RideEventSerializer, RideQuerySerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from django.db.models import F, Value, FloatField, ExpressionWrapper
 from django.db.models.functions import Radians, Sin, Cos, ACos
 from .permissions import IsAdminUser
 from .pagination import ViewsetPagination
